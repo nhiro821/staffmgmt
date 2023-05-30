@@ -15,7 +15,7 @@
 
 <head>
 	<title>Your Page Title</title>
-	<!-- CSS や他のヘッダー情報をここに追加 -->
+	<!-- CSS や他のヘッダー情報aaaをここに追加 -->
 	<style>
 		.name {
 			font-weight: bold;
