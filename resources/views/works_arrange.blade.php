@@ -61,35 +61,16 @@
 					{{ optional($work->projectget)->project_name }}
 				</td>
 				<td>
-					<select id="edit" data-field="arrangement_status" data-id="{{ $work->id }}">
+					<select class="edit-select" data-field="arrangement_status" data-id="{{ $work->id }}">
 						@foreach (config('const.arrangement_status_1') as $key => $value)
 						<option value="{{ $key }}" {{ $work->arrangement_status == $key ? 'selected' : '' }}>
 							{{ $value }}
 						</option>
 						@endforeach
 					</select>
-					<script type="text/javascript">
-						$(document).ready(function() {
-							$('#edit').change(function() {
-								var selectedValue = $(this).val();
 
-								$.ajax({
-									url: '/updateStatus', // Laravel route, you may need to adjust this
-									type: 'POST',
-									data: {
-										'arrangement_status': selectedValue,
-										'_token': $('meta[name="csrf-token"]').attr('content') // CSRF token
-									},
-									success: function(response) {
-										console.log('The arrangement_status has been successfully updated: ' + response);
-									},
-									error: function(error) {
-										console.log('An error occurred: ' + error);
-									}
-								});
-							});
-						});
-					</script>
+
+
 
 
 					<!-- <select class="form-control w-25 select" id="torihikisaki" name="torihikisaki_id">
@@ -102,6 +83,37 @@
 			</tr>
 			@endforeach
 		</table>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.edit-select').change(function() {
+					var arrangement_status = $(this).val();
+					var selectId = $(this).data('id');
+					// console.log('Selected value for id ' + selectId);
+					$.ajax({
+						url: '/staffmgmt/public/updateStatus ', // Laravel route, you may need to adjust this
+						type: 'POST',
+						data: {
+							'data_id': selectId,
+							'arrangement_status': arrangement_status,
+							// 'arrangement_status': selectedValue,
+							'_token': $('meta[name="csrf-token"]').attr('content') // CSRF token
+						},
+						success: function(response) {
+							// alert(arrangement_status)
+							//pageをリロード
+							location.reload();
+						},
+						// error: function(error) {
+						// 	console.log('An error occurred: ' + error);
+						// }
+						error: function(xhr, status, error) {
+							console.log('An error occurred: ', xhr.responseJSON);
+						}
+					});
+				});
+			});
+		</script>
 
 
 

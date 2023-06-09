@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\Staff;
+use App\Models\Work;
+use App\Models\Custmer;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Log;
 
 class ProjectController extends Controller
 {
@@ -29,6 +36,9 @@ class ProjectController extends Controller
 	public function create()
 	{
 		//
+		$custmers = Custmer::all();
+
+		return view('projectform', compact('custmers'));
 	}
 
 	/**
@@ -37,8 +47,29 @@ class ProjectController extends Controller
 	 * @param  \App\Http\Requests\StoreProjectRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(StoreProjectRequest $request)
+	public function store(Request $request)
 	{
+		$form = $request->all();
+		$project = new Project;
+		$user_id = Auth::id();
+
+
+		$project->project_name = $form['project_name'];
+		$project->torihikisaki_id = $form['id'];
+		$project->order_amount = $form['project_price'];
+		$project->project_startday = $form['project_startday'];
+		$project->project_endday = $form['project_endday'];
+		//もしuser_idがあれば、user_idを入れる
+		if ($user_id) {
+			$project->creator = $user_id;
+			$project->updater = $user_id;
+		}
+
+		$project->save();
+
+		return redirect()->route('project.index')->with('flash_message', '登録が完了しました');
+
+
 		//
 	}
 

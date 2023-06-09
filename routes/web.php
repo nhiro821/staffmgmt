@@ -27,12 +27,17 @@ Route::get('/staff', [App\Http\Controllers\StaffController::class, 'index'])->na
 Route::get('/works', [App\Http\Controllers\WorkController::class, 'index'])->name('works.index');
 Route::get('/works_arrange', [App\Http\Controllers\WorkController::class, 'index2'])->name('works.index2');
 
-Route::post('/updateStatus', [App\Http\Controllers\WorkController::class, 'works_by_project'])->name('works.by_project');
 
+Route::get('/works_by_project', [App\Http\Controllers\WorkController::class, 'works_by_project'])->name('works.by_project');
 
-// Route::post('/updateStatus', [App\Http\Controllers\StatusController::class, 'updateStatus'])->name('status.updateStatus');
+Route::post('/updateStatus', [App\Http\Controllers\WorkController::class, 'updateStatus'])->name('works.updateStatus');
+Route::post('/updateMemo', [App\Http\Controllers\WorkController::class, 'updateMemo'])->name('works.updateMemo');
 
-Route::get('/projects', [App\Http\Controllers\ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects', [App\Http\Controllers\ProjectController::class, 'index'])->name('project.index');
+Route::get('/projectform', [App\Http\Controllers\ProjectController::class, 'create'])->name('project.create');
+Route::get('/projectedit', [App\Http\Controllers\ProjectController::class, 'edit'])->name('project.edit');
+Route::post('/projectform', [App\Http\Controllers\ProjectController::class, 'store'])->name('project.store');
+Route::post('/projects{id}', [App\Http\Controllers\ProjectController::class, 'update'])->name('project.update');
 
 Route::get('/custmers', [App\Http\Controllers\CustmerController::class, 'index'])->name('custmers.index');
 
