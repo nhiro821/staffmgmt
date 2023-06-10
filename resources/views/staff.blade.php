@@ -46,6 +46,11 @@
 				<div class="prefecture">
 					{{ $staff->staff_prefecture }}{{ $staff->staff_address }}
 				</div>
+				<div>
+					<a href="{{ route('staff.edit', ['id' => $staff->id]) }}" class="btn btn-secondary">編集</a>
+
+
+				</div>
 
 			</div>
 			@endforeach

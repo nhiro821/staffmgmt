@@ -36,45 +36,45 @@
 			@foreach ($works as $works)
 			<div class="row border">
 				<div class="col">
-					<label class="mr-2 ">作業日</label>{{ $works->working_date }}
+					<label class="mr-4 ">作業日</label>{{ $works->working_date }}
 				</div>
 				<div class="col">
-					<label class="mr-2 ">作業者</label> {{ $works->staff->staff_name }}
+					<label class="mr-4 ">作業者</label> {{ $works->staff->staff_name }}
 				</div>
 
 				<div class="col">
 
-					<label class="mr-2 ">案件名</label>{{ ($works->projectget)->project_name }}
-
-				</div>
-				<div class="col">
-
-					<label class="mr-2">請負先</label>{{ $works->projectget->custmeron->name }}
+					<label class="mr-4 ">案件名</label>{{ ($works->projectget)->project_name }}
 
 				</div>
 				<div class="col">
-					<label class="mr-2">手配状況</label>
+
+					<label class="mr-4">請負先</label>{{ $works->projectget->custmeron->name }}
+
+				</div>
+				<div class="col">
+					<label class="mr-4">手配状況</label>
 					{{ config("const.arrangement_status_1.$works->arrangement_status") }}
 
 				</div>
 				<div class="col">
-					<label class="mr-2">依頼区分</label>{{ config("const.order_type.$works->order_type") }}
+					<label class="mr-4">依頼区分</label>{{ config("const.order_type.$works->order_type") }}
 
 				</div>
 				<div class="row">
 					<div class="col-6">
-						<label class="mr-2">作業場所</label>{{ $works->work_prefecture }}{{ $works->work_address }}
+						<label class="mr-4">作業場所</label>{{ $works->work_prefecture }}{{ $works->work_address }}
 					</div>
 					<div class="col-3">
-						<label class="mr-2">作業開始予定時間</label>{{ $works->working_start_plan_time }}
+						<label class="mr-4">作業開始予定時間</label>{{ $works->working_start_plan_time }}
 					</div>
 					<div class="col-3">
-						<label class="mr-2">作業終了予定時間</label>{{ $works->working_end_plan_time }}
+						<label class="mr-4">作業終了予定時間</label>{{ $works->working_end_plan_time }}
 					</div>
 				</div>
 				<div class="row">
 					<div class="col">
-						<label class="mr-2">報酬</label>{{ $works->reward }}
+						<label class="mr-4">報酬</label>{{ $works->reward }}
 					</div>
 				</div>
 

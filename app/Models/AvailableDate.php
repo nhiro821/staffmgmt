@@ -7,5 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class AvailableDate extends Model
 {
-    use HasFactory;
+	use HasFactory;
+
+
+
+	public function staff()
+	{
+		return $this->belongsTo(Staff::class);
+	}
 }

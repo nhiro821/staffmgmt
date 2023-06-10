@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreStaffRequest;
 use App\Http\Requests\UpdateStaffRequest;
 use App\Models\Staff;
+use App\Models\AvailableDate;
+
 
 class StaffController extends Controller
 {
@@ -59,9 +61,26 @@ class StaffController extends Controller
 	 * @param  \App\Models\Staff  $staff
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit(Staff $staff)
+	public function edit($id)
 	{
-		//
+
+		$staff = Staff::find($id);
+		//作業可能日を取得
+		$available_dates = AvailableDate::where('staff_number', $id)->get();
+
+		// dd($available_dates);
+		$startDate = \Carbon\Carbon::now()->startOfMonth()->toDateString();
+		$endDate = \Carbon\Carbon::now()->endOfMonth()->toDateString();
+		$dates = [];
+		$period = \Carbon\CarbonPeriod::create(\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth());
+		foreach ($period as $date) {
+			$dates[] = $date->format('Y-m-d');
+		}
+
+
+
+
+		return view('staff_edit', compact('staff', 'available_dates', 'startDate', 'endDate', 'dates', 'period'));
 	}
 
 	/**

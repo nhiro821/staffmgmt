@@ -24,6 +24,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/staff', [App\Http\Controllers\StaffController::class, 'index'])->name('staff.index');
 
+
+Route::get('/staff_edit/{id}', [App\Http\Controllers\StaffController::class, 'edit'])->name('staff.edit');
+
+
 Route::get('/works', [App\Http\Controllers\WorkController::class, 'index'])->name('works.index');
 Route::get('/works_arrange', [App\Http\Controllers\WorkController::class, 'index2'])->name('works.index2');
 

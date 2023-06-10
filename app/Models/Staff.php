@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Staff extends Model
 {
-    use HasFactory;
+	use HasFactory;
+
+	public function availableDates()
+	{
+		return $this->hasMany(AvailableDate::class);
+	}
 }
