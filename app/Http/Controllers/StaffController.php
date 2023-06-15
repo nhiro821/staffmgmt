@@ -6,6 +6,8 @@ use App\Http\Requests\StoreStaffRequest;
 use App\Http\Requests\UpdateStaffRequest;
 use App\Models\Staff;
 use App\Models\AvailableDate;
+use Illuminate\Http\Request;
+use DateTime;
 
 
 class StaffController extends Controller
@@ -39,9 +41,28 @@ class StaffController extends Controller
 	 * @param  \App\Http\Requests\StoreStaffRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
+	public function update_day(Request $request, $id)
+	{
+		// フォームから送られてきた日付にアクセス：
+		$dates = $request->input('dates');
+		//$datesの数だけループして、データベースに保存する
+
+
+		foreach ($dates as $date) {
+
+			$available_date = new AvailableDate();
+			$available_date->staff_number = $id;
+			$available_date->date = $date;
+			$available_date->save();
+		}
+
+
+		return redirect()->route('staff.edit', $id)->with('success', '作業可能日を更新しました。');
+	}
+
+
 	public function store(StoreStaffRequest $request)
 	{
-		//
 	}
 
 	/**
@@ -71,16 +92,20 @@ class StaffController extends Controller
 		// dd($available_dates);
 		$startDate = \Carbon\Carbon::now()->startOfMonth()->toDateString();
 		$endDate = \Carbon\Carbon::now()->endOfMonth()->toDateString();
+
 		$dates = [];
+		//期間を取得
 		$period = \Carbon\CarbonPeriod::create(\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth());
+
+		$weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+		$weekMap = [0, 1, 2, 3, 4, 5, 6];
+
 		foreach ($period as $date) {
 			$dates[] = $date->format('Y-m-d');
 		}
 
 
-
-
-		return view('staff_edit', compact('staff', 'available_dates', 'startDate', 'endDate', 'dates', 'period'));
+		return view('staff_edit', compact('staff', 'available_dates', 'startDate', 'endDate', 'dates', 'period', 'weekDays', 'weekMap'));
 	}
 
 	/**

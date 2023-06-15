@@ -87,7 +87,7 @@
 						@php
 						$dateCarbon = \Carbon\Carbon::parse($date);
 						$dayOfWeek = $weekMap[$dateCarbon->dayOfWeek];
-
+						$checked = checked;
 						@endphp
 						@if($dayOfWeek == 0 && !$loop->first)
 
@@ -96,21 +96,9 @@
 						@endif
 
 
-						@php
-
-						$checked = in_array($date,$available_dates->pluck('date')->toArray()) ? 'checked' : '';
-
-
-						@endphp
-
-
-
-
-
 						<div class="col">
 							<div class="form-check">
-
-								<input class="form-check-input" input type="checkbox" name="dates[]" value="{{ $date }}" id="dateCheck{{ $loop->iteration }}" {{$checked}}>
+								<input class="form-check-input" type="checkbox" value="" id="dateCheck{{ $loop->iteration }}">
 								<label class="form-check-label" for="dateCheck{{ $loop->iteration }}">
 									<!-- {{ $weekDays[$dayOfWeek] }}: {{ $date }} -->
 									{{ $date }}
@@ -122,7 +110,7 @@
 						@if($dayOfWeek != 6 && $loop->last)
 						<!-- 日曜日になるまでdivを生成する -->
 						@for($i = $dayOfWeek; $i < 6; $i++) <div class="col">
-							test
+
 					</div>
 					@endfor @endif @endforeach
 				</div>
@@ -156,7 +144,7 @@
 		@endphp
 		@if($dayOfWeek == 0 && !$loop->first)
 	</div>
-	{{var_dump($date)}}
+
 	<div class="row border mt-2">
 		@endif
 

@@ -23,7 +23,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 Route::get('/staff', [App\Http\Controllers\StaffController::class, 'index'])->name('staff.index');
-
+Route::post('/staff_update_day/{id}', [App\Http\Controllers\StaffController::class, 'update_day'])->name('staff.update_day');
 
 Route::get('/staff_edit/{id}', [App\Http\Controllers\StaffController::class, 'edit'])->name('staff.edit');
 
