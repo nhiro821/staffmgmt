@@ -39,11 +39,6 @@
 					<div>
 						{{ $staff->staff_name }}
 					</div>
-					@foreach ($available_dates as $available_date)
-					<div>
-						{{ $available_date->date }}
-					</div>
-					@endforeach
 
 
 					<!-- メインコンテンツのコンテンツをここに配置 -->

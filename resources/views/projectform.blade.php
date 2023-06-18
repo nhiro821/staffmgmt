@@ -49,8 +49,8 @@
 						<input type="text" class="form-control" id="datepicker" name="project_startday">
 					</div>
 				</div>
-				<div class="col-1 py-3">～</div>
-				<div class="col-2 py-3">
+				<div class="col-1 py-2">～</div>
+				<div class="col-2 py-2">
 					<label>プロジェクト終了日</label>
 					<div class="w-75">
 						<input type="text" class="form-control" id="datepicker2" name="project_endday">

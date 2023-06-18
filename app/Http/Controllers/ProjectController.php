@@ -64,13 +64,9 @@ class ProjectController extends Controller
 			$project->creator = $user_id;
 			$project->updater = $user_id;
 		}
-
 		$project->save();
 
 		return redirect()->route('project.index')->with('flash_message', '登録が完了しました');
-
-
-		//
 	}
 
 	/**
@@ -94,7 +90,25 @@ class ProjectController extends Controller
 	{
 		//
 	}
+	public function workedit(Project $project, $id)
+	{
+		//
+		// dd($id);
+		$project = Project::find($id);
+		$staffs = Staff::all();
+		$works = Work::all();
 
+		// dd($project);
+
+		// $staffs = $staffs->sortBy('staff_number');
+		// $works = $works->sortBy('work_number');
+		// $staffs = $staffs->pluck('staff_name', 'staff_number');
+		// $works = $works->pluck('work_name', 'work_number');
+		// $staffs = $staffs->prepend('選択してください', '');
+		// $works = $works->prepend('選択してください', '');
+
+		return view('projectworks', compact('project', 'staffs', 'works'));
+	}
 	/**
 	 * Update the specified resource in storage.
 	 *

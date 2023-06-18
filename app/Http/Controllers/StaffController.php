@@ -45,21 +45,59 @@ class StaffController extends Controller
 	{
 		// フォームから送られてきた日付にアクセス：
 		$dates = $request->input('dates');
+
 		//$datesの数だけループして、データベースに保存する
 
+		// Convert each date to Y-m-d format for comparison
+		$dates = $dates ?: [];
+		$dates = array_map(function ($date) {
+			return (new DateTime($date))->format('Y-m-d');
+		}, $dates);
 
-		foreach ($dates as $date) {
+		if (empty($dates)) {
+			// 一旦チェックボックスの入ってない該当スタッフ当月の日付はクリアにする。
+			AvailableDate::where('staff_number', $id)
+				->whereYear('date', now()->year)
+				->whereMonth('date', now()->month)
+				->delete();
+		} else {
+			// First, find all existing dates for the given staff number in the same month
+			$existing_dates = AvailableDate::where('staff_number', $id)
+				->whereYear('date', (new DateTime($dates[0]))->format('Y'))
+				->whereMonth('date', (new DateTime($dates[0]))->format('m'))
+				->get();
 
-			$available_date = new AvailableDate();
-			$available_date->staff_number = $id;
-			$available_date->date = $date;
-			$available_date->save();
+
+			foreach ($existing_dates as $existing_date) {
+				// Convert existing_date to Y-m-d format for comparison
+				$existing_date_format = (new DateTime($existing_date->date))->format('Y-m-d');
+
+				// If the existing date is not in the new dates array, delete it
+				if (!in_array($existing_date_format, $dates)) {
+					AvailableDate::where('id', $existing_date->id)->delete();
+				}
+			}
+
+			foreach ($dates as $date) {
+				// Check if the date already exists for the staff
+				$existing_date = $existing_dates->first(function ($existing_date) use ($date) {
+					// Convert existing_date to DateTime object
+					$existing_date_time = (new DateTime($existing_date->date))->format('Y-m-d');
+
+					return $date == $existing_date_time;
+				});
+
+				// If the date does not exist, create new date entry
+				if (!$existing_date) {
+					$available_date = new AvailableDate();
+					$available_date->staff_number = $id;
+					$available_date->date = $date;
+					$available_date->save();
+				}
+			}
 		}
-
-
 		return redirect()->route('staff.edit', $id)->with('success', '作業可能日を更新しました。');
 	}
-
 
 	public function store(StoreStaffRequest $request)
 	{
@@ -93,19 +131,36 @@ class StaffController extends Controller
 		$startDate = \Carbon\Carbon::now()->startOfMonth()->toDateString();
 		$endDate = \Carbon\Carbon::now()->endOfMonth()->toDateString();
 
+		$thismonth = now()->month;
+
+
+		//next系
+		$nextmonth = now()->addMonth()->month;
+		$nextMonthStart = \Carbon\Carbon::now()->addMonth()->startOfMonth();
+		$nextMonthEnd = \Carbon\Carbon::now()->addMonth()->endOfMonth();
+		$period = \Carbon\CarbonPeriod::create($nextMonthStart, $nextMonthEnd);
+		$nextperiod = \Carbon\CarbonPeriod::create($nextMonthStart, $nextMonthEnd);
+
+
 		$dates = [];
 		//期間を取得
 		$period = \Carbon\CarbonPeriod::create(\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth());
+		$nextperiod = \Carbon\CarbonPeriod::create(\Carbon\Carbon::now()->addMonth()->startOfMonth(), \Carbon\Carbon::now()->addMonth()->endOfMonth());
 
-		$weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+		// $weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+		// $weekMap = [0, 1, 2, 3, 4, 5, 6];
+
+		$weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 		$weekMap = [0, 1, 2, 3, 4, 5, 6];
 
 		foreach ($period as $date) {
 			$dates[] = $date->format('Y-m-d');
 		}
+		foreach ($nextperiod as $nextdate) {
+			$nextdates[] = $nextdate->format('Y-m-d');
+		}
 
-
-		return view('staff_edit', compact('staff', 'available_dates', 'startDate', 'endDate', 'dates', 'period', 'weekDays', 'weekMap'));
+		return view('staff_edit', compact('staff', 'available_dates', 'startDate', 'endDate', 'dates', 'period', 'weekDays', 'weekMap', 'thismonth', 'nextdates', 'nextmonth'));
 	}
 
 	/**
